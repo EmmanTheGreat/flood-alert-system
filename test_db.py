@@ -1,25 +1,12 @@
-import psycopg2
-import os
-from dotenv import load_dotenv
+import streamlit as st
+from st_supabase_connection import SupabaseConnection
 
-load_dotenv()
+# Initialize connection.
+conn = st.connection("supabase",type=SupabaseConnection)
 
-# Database credentials
-DB_HOST = os.getenv("DB_HOST", "http://localhost:8501")
-DB_NAME = os.getenv("DB_NAME", "Flood_Alert_System")
-DB_USER = os.getenv("DB_USER", "admin")
-DB_PASS = os.getenv("DB_PASS", "1234")
-DB_PORT = os.getenv("DB_PORT", "5432")
+# Perform query.
+rows = conn.query("*", table="sensor_data", ttl="10m").execute()
 
-try:
-    conn = psycopg2.connect(
-        host=DB_HOST,
-        dbname=DB_NAME,
-        user=DB_USER,
-        password=DB_PASS,
-        port=DB_PORT
-    )
-    print("✅ Successfully connected to PostgreSQL!")
-    conn.close()
-except Exception as e:
-    print("❌ Error connecting to database:", e)
+# Print results.
+for row in rows.data:
+    st.write(f"{row['sensor1.flow_rate']} has a :{row['sensor1.humidity']}:")
