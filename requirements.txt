@@ -70,3 +70,8 @@ tzdata==2025.1
 urllib3==2.3.0
 websockets==13.1
 yarl==1.18.3
+pandas
+plotly
+psutil
+folium
+streamlit-folium
