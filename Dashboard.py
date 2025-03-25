@@ -77,6 +77,7 @@ with top_col3:
 # Filter data based on the entire date range
 if not db_data.empty:
     db_data["created_at"] = pd.to_datetime(db_data["created_at"]).dt.tz_convert(None)
+    db_data["time"] = db_data["created_at"].dt.strftime("%H:%M")  # Extract only hour and minute
     start_date = db_data["created_at"].min()
     end_date = db_data["created_at"].max()
 
@@ -87,7 +88,7 @@ if not db_data.empty:
     col_graph, col_gauge = st.columns([7, 5])
 
     with col_graph:
-        fig1 = px.line(filtered_data, x="created_at", y=["water_level_1", "water_level_2"],
+        fig1 = px.line(filtered_data, x="time", y=["water_level_1", "water_level_2"],
                        title="Water Level Over Time (Sensor 1 & 2)", markers=True, line_shape="linear")
         st.plotly_chart(fig1, use_container_width=True)
 
